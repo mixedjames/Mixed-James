@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+  exclude-result-prefixes="w m"
+  >
+
+  <xsl:template match="w:p[./m:oMathPara]">
+  <p>
+    <xsl:attribute name="class">
+      equation
+      <xsl:value-of select="./w:pPr/w:pStyle/@w:val"/>
+    </xsl:attribute>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <mrow>
+        <xsl:apply-templates/>
+      </mrow>
+    </math>
+  </p>
+  </xsl:template>
+
+  <xsl:template match="m:r">
+  <mi><xsl:apply-templates/></mi>
+  </xsl:template>
+
+  <xsl:template match="m:f">
+  <mfrac>
+    <xsl:apply-templates select="./m:num"/>
+    <xsl:apply-templates select="./m:den"/>
+  </mfrac>
+  </xsl:template>
+
+  <xsl:template match="m:sSub">
+  <msub>
+    <xsl:apply-templates select="./m:e"/>
+    <xsl:apply-templates select="./m:sub"/>
+  </msub>
+  </xsl:template>
+
+  <xsl:template match="m:sSup">
+  <msup>
+    <xsl:apply-templates select="./m:e"/>
+    <xsl:apply-templates select="./m:sup"/>
+  </msup>
+  </xsl:template>
+
+  <xsl:template match="m:d">
+  <mfenced separators="">
+    <xsl:apply-templates/>
+  </mfenced>
+  </xsl:template>
+
+</xsl:stylesheet>

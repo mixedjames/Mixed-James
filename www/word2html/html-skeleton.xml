@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  exclude-result-prefixes="w"
+  >
+
+  <xsl:output method="html" encoding="utf-8" indent="yes" />
+
+  <xsl:param name="stylesheetURI" select="'default-styles.css'"/>
+  <xsl:param name="pageStylesheetURI" select="false"/>
+
+  <xsl:template match="/">
+
+    <xsl:apply-templates mode="generate-sections"/>
+
+    <section class="endnotes"></section>
+
+  </xsl:template>
+
+</xsl:stylesheet>

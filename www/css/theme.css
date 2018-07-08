@@ -1,0 +1,108 @@
+article {
+  color: white;
+
+  font-family: 'Open Sans';
+  font-size: 13pt;
+  font-weight: 300;
+}
+
+article h1,
+article h2,
+article h3
+{
+  font-family: 'Open Sans';
+  margin-top: 70px;
+  margin-bottom: 30px;
+}
+
+article h1 {
+  letter-spacing: 2px;
+  font-weight: 300;
+}
+
+article h2 {
+  letter-spacing: 2px;
+  font-weight: 300;
+}
+
+article h1.title {
+  font-family: 'Open Sans';
+  text-align: center;
+  font-size: 26pt;
+  font-weight: 200;
+  word-break: break-all;
+}
+
+@media (min-width: 850px) {
+  article h1.title {
+    font-size: 36pt;
+  }
+}
+
+article a[href] {
+  color: orange;
+}
+
+article .container {
+  width: 100%;
+  max-height: 80vw;
+  overflow: auto;
+}
+
+article.tag-meducation.tag-notes section:first-child {
+  display: none;
+}
+
+article .articles a {
+  display: block;
+  color: white;
+  text-decoration: none;
+
+  background: rgb(71,107,184);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 850px) {
+  article .articles a {
+    background: rgb(55, 84, 145);
+  }
+}
+
+article .articles h3 {
+  margin: 0;
+  font-weight: 300;
+}
+
+article .articles a p.date-posted {
+  font-style: italic;
+  font-size: 10pt;
+  margin: 0;
+}
+
+article .articles a p.description {
+  font-style: italic;
+  font-size: 11pt;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+article footer {
+  font-style: italic;
+  font-size: 11pt;
+}
+
+article .code-container {
+  width: 100%;
+  overflow: auto;
+  background: rgb(71,107,184);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@media (min-width: 850px) {
+  article .code-container {
+    background: rgb(55, 84, 145);
+  }
+}

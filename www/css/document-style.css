@@ -1,0 +1,75 @@
+article .subscript { vertical-align: sub; }
+article .superscript { vertical-align: super; }
+article .strike { text-decoration: line-through; }
+article .bold { font-weight: 600; }
+article .italic { font-style: italic; }
+article .underline { text-decoration: underline; }
+
+article ol.bullet-list {
+  list-style-type: disc;
+}
+
+article ol.lowerLetter-list {
+  list-style-type: lower-alpha;
+}
+
+article ol.upperLetter-list {
+  list-style-type: upper-alpha;
+}
+
+article ol.lowerRoman-list {
+  list-style-type: lower-roman;
+}
+
+article .endnote-reference {
+  vertical-align: super;
+  font-size: 75%;
+}
+
+article .endnotes li p {
+  margin-top: 0;
+}
+
+article .equation {
+  text-align: center;
+}
+
+article .inline-image {
+  width: 100%;
+  overflow: auto;
+}
+
+article .inline-image img {
+}
+
+article .anchored-image {
+  display: inline-block;
+  float: left;
+}
+
+article .anchored-image.align-left {
+  float: left;
+}
+
+article .anchored-image.align-right {
+  float: right;
+}
+
+article .anchored-image .caption {
+  font-style: italic;
+  color: grey;
+  font-size: 11pt;
+}
+
+article div.table-container {
+  width: 100%;
+  overflow: auto;
+}
+
+article table td {
+  vertical-align: top;
+}
+
+article a {
+  word-break: break-all;
+}

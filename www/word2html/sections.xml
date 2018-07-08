@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  exclude-result-prefixes="w"
+  >
+
+  <xsl:template
+    match="w:p[preceding-sibling::w:p[1]/w:pPr/w:sectPr or not(preceding-sibling::*)]"
+    mode="generate-sections">
+
+    <xsl:variable name="n" select="count(preceding-sibling::*/w:pPr/w:sectPr)"/>
+
+    <section>
+      <xsl:for-each select=". | following-sibling::*[count(preceding-sibling::*/w:pPr/w:sectPr) = $n]">
+        <xsl:apply-templates select="."/>
+      </xsl:for-each>
+    </section>
+
+  </xsl:template>
+
+  <xsl:template
+    match="w:p"
+    mode="generate-sections"/>
+
+</xsl:stylesheet>

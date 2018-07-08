@@ -1,0 +1,28 @@
+article table {
+  background: rgb(55, 84, 145);
+  border: solid 2px rgb(71,107,184);
+  border-collapse: collapse;
+  width: 100%;
+}
+
+article table.has-h-bands tr td {
+  border: solid 2px rgb(71,107,184);
+}
+
+article table.has-h-bands tr:nth-child(2n) td {
+  background: rgb(71,107,184);
+  border: solid 1px rgb(55, 84, 145);
+}
+
+article table.has-v-bands tr td:nth-child(2n) {
+  background: rgb(71,107,184);
+}
+
+article table.hilite-first-col tr td:first-child {
+  font-style: italic;
+}
+
+article table.hilite-first-row tr:first-child td {
+  font-weight: bold;
+  font-style: normal;
+}

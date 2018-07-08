@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  >
+
+  <xsl:import href="html-skeleton.xml"/>
+  <xsl:import href="sections.xml"/>
+  <xsl:import href="common-paragraph-styles.xml"/>
+  <xsl:import href="code.xml"/>
+  <xsl:import href="run-formatting.xml"/>
+  <xsl:import href="tables.xml"/>
+  <xsl:import href="bluf.xml"/>
+  <xsl:import href="lists.xml"/>
+  <xsl:import href="image.xml"/>
+  <xsl:import href="hyperlinks.xml"/>
+  <xsl:import href="canvas.xml"/>
+  <xsl:import href="equations.xml"/>
+
+  <xsl:output method="html" encoding="utf-8" indent="yes"/>
+
+</xsl:stylesheet>

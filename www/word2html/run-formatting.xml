@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  exclude-result-prefixes="w"
+  >
+
+  <xsl:template match="w:r">
+    <xsl:variable name="style">
+      <xsl:value-of
+        select="concat(
+          substring('bold ', 1, 5*number(count(./w:rPr/w:b) = 1)),
+          substring('italic ', 1, 7*number(count(./w:rPr/w:i) = 1)),
+          substring('underline ', 1, 10*number(count(./w:rPr/w:u) = 1)),
+          substring('superscript ', 1, 12*number(count(./w:rPr/w:vertAlign[@w:val = 'superscript']) = 1)),
+          substring('subscript ', 1, 10*number(count(./w:rPr/w:vertAlign[@w:val = 'subscript']) = 1)),
+          substring('strike ', 1, 7*number(count(./w:rPr/w:strike) = 1)),
+          substring('caps ', 1, 5*number(count(./w:rPr/w:caps) = 1)),
+          substring('small-caps ', 1, 11*number(count(./w:rPr/w:smallCaps) = 1))
+        )"/>
+
+      <xsl:if test="./w:rPr/w:color[@w:themeColor and @w:themeShade]">
+        <xsl:value-of select="concat(' color-', ./w:rPr/w:color/@w:themeColor, '-', ./w:rPr/w:color/@w:themeShade)"/>
+      </xsl:if>
+
+      <xsl:if test="./w:rPr/w:color[@w:val]">custom-color</xsl:if>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="string-length(normalize-space($style)) = 0">
+        <xsl:apply-templates/>
+      </xsl:when>
+
+      <xsl:otherwise>
+        <span>
+          <xsl:attribute name="class">
+            <xsl:value-of select="$style"/>
+          </xsl:attribute>
+          <xsl:if test="./w:rPr/w:color[@w:val]">
+            <xsl:attribute name="style">
+              color: #<xsl:value-of select="./w:rPr/w:color/@w:val"/>
+            </xsl:attribute>
+          </xsl:if>
+          <xsl:apply-templates/>
+        </span>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="w:r/w:br[@w:type = 'textWrapping' or not(@w:type)]"><br/></xsl:template>
+
+  <xsl:template match="w:r/w:endnoteReference">
+    <a class="endnote-reference"><xsl:attribute name="href">
+        #endnote-<xsl:value-of select="./@w:id"/>
+      </xsl:attribute>(<xsl:value-of select="./@w:id"/>)</a>
+  </xsl:template>
+
+</xsl:stylesheet>

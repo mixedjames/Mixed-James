@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+  xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+  xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
+  xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+  xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:customTags="urn:custom-tags"
+  exclude-result-prefixes="w a pic wp wpc wps mc"
+  >
+
+  <customTags:customTags>
+    <customTags:line/>
+    <customTags:straightConnector1/>
+    <customTags:rect/>
+  </customTags:customTags>
+
+  <xsl:template match="mc:AlternateContent[./mc:Choice[@Requires = 'wpc']]">
+    <xsl:apply-templates select="./mc:Choice[@Requires = 'wpc']"/>
+  </xsl:template>
+
+  <xsl:template match="w:drawing[wp:inline/a:graphic/a:graphicData/wpc:wpc]">
+
+    <xsl:variable name="extent" select="./wp:inline/wp:extent"/>
+    <xsl:variable name="canvas" select="./wp:inline/a:graphic/a:graphicData/wpc:wpc"/>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 {$extent/@cx div (914400 div 72)} {$extent/@cy div (914400 div 72)}"
+      class="bg-{$canvas/wpc:bg/a:solidFill/a:schemeClr/@val}"
+      >
+      <defs>
+        <marker id="arrowhead-start" markerWidth="10" markerHeight="10" refX="1" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M9,0 L9,6 L0,3 z" fill="ContextFill"/>
+        </marker>
+
+        <marker id="arrowhead-end" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="ContextFill"/>
+        </marker>
+      </defs>
+
+      <xsl:apply-templates/>
+    </svg>
+
+  </xsl:template>
+
+  <xsl:template match="wps:wsp">
+    <xsl:variable name="xy" select="./wps:spPr/a:xfrm"/>
+    <xsl:variable name="style" select="./wps:style"/>
+    <xsl:variable name="x" select="round($xy/a:off/@x div (914400 div 72))"/>
+    <xsl:variable name="y" select="round($xy/a:off/@y div (914400 div 72))"/>
+    <xsl:variable name="w" select="round($xy/a:ext/@cx div (914400 div 72))"/>
+    <xsl:variable name="h" select="round($xy/a:ext/@cy div (914400 div 72))"/>
+
+    <xsl:variable name="template-name" select="./wps:spPr/a:prstGeom/@prst"/>
+
+    <xsl:variable name="transform">
+      <xsl:if test="$xy/@rot">rotate(<xsl:value-of select="$xy/@rot div 60000"/>, <xsl:value-of select="$x + $w div 2"/>, <xsl:value-of select="$y + $h div 2"/>)</xsl:if>
+      <xsl:if test="$xy/@flipH = '1'">scale(1, -1) translate(0, <xsl:value-of select="-2 * ($y + $h div 2)"/>)</xsl:if>
+      <xsl:if test="$xy/@flipW = '1'">scale(-1, 1) translate(<xsl:value-of select="-2 * ($x + $w div 2)"/>, 0)</xsl:if>
+    </xsl:variable>
+
+    <xsl:apply-templates select="document('')//customTags:customTags/*[local-name() = $template-name]" mode="handle-custom-tags">
+      <xsl:with-param name="xy" select="$xy"/>
+      <xsl:with-param name="x" select="$x"/>
+      <xsl:with-param name="y" select="$y"/>
+      <xsl:with-param name="w" select="$w"/>
+      <xsl:with-param name="h" select="$h"/>
+      <xsl:with-param name="style" select="$style"/>
+      <xsl:with-param name="transform" select="$transform"/>
+      <xsl:with-param name="theNode" select="."/>
+    </xsl:apply-templates>
+  </xsl:template>
+
+  <xsl:template match="customTags:line" name="line" mode="handle-custom-tags">
+    <xsl:param name="x"/>
+    <xsl:param name="y"/>
+    <xsl:param name="w"/>
+    <xsl:param name="h"/>
+    <xsl:param name="style"/>
+    <xsl:param name="transform"/>
+
+    <line
+      x1="{$x}" x2="{$x + $w}"
+      y1="{$y}" y2="{$y + $h}"
+      transform="{$transform}"
+      class="line-{$style/a:lnRef/a:schemeClr/@val} fill-{$style/a:fillRef/a:schemeClr/@val} font-{$style/a:fontRef/a:schemeClr/@val}"
+      stroke="black" stroke-width="2"/>
+  </xsl:template>
+
+  <xsl:template match="customTags:straightConnector1" name="straightConnector1" mode="handle-custom-tags">
+    <xsl:param name="xy"/>
+    <xsl:param name="x"/>
+    <xsl:param name="y"/>
+    <xsl:param name="w"/>
+    <xsl:param name="h"/>
+    <xsl:param name="style"/>
+    <xsl:param name="transform"/>
+
+    <line
+      x1="{$x}" x2="{$x + $w}"
+      y1="{$y}" y2="{$y + $h}"
+      transform="{$transform}"
+      class="line-{$style/a:lnRef/a:schemeClr/@val} fill-{$style/a:fillRef/a:schemeClr/@val} font-{$style/a:fontRef/a:schemeClr/@val}"
+      stroke="black" stroke-width="2">
+
+      <xsl:if test="$xy/@flipH = '1'"><xsl:attribute name="marker-start">url(#arrowhead-start)</xsl:attribute></xsl:if>
+      <xsl:if test="not($xy/@flipH = '1')"><xsl:attribute name="marker-end">url(#arrowhead-end)</xsl:attribute></xsl:if>
+    </line>
+  </xsl:template>
+
+  <xsl:template match="customTags:rect" name="rect" mode="handle-custom-tags">
+    <xsl:param name="x"/>
+    <xsl:param name="y"/>
+    <xsl:param name="w"/>
+    <xsl:param name="h"/>
+    <xsl:param name="style"/>
+    <xsl:param name="transform"/>
+    <xsl:param name="theNode"/>
+
+    <rect
+      x="{$x}" y="{$y}"
+      width="{$w}" height="{$h}"
+      transform="{$transform}"
+      class="line-{$style/a:lnRef/a:schemeClr/@val} fill-{$style/a:fillRef/a:schemeClr/@val} font-{$style/a:fontRef/a:schemeClr/@val}"
+      stroke="black" stroke-width="2" fill="none"/>
+    <foreignObject
+      x="{$x}" y="{$y}"
+      width="{$w}" height="{$h}"
+      transform="{$transform}"
+      class="line-{$style/a:lnRef/a:schemeClr/@val} fill-{$style/a:fillRef/a:schemeClr/@val} font-{$style/a:fontRef/a:schemeClr/@val}"
+      >
+      <p><xsl:apply-templates select="$theNode//w:p"/></p>
+    </foreignObject>
+  </xsl:template>
+
+</xsl:stylesheet>

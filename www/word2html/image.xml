@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+  xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+  xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+  xmlns:asvg="http://schemas.microsoft.com/office/drawing/2016/SVG/main"
+  exclude-result-prefixes="w a pic wp r asvg"
+  >
+
+  <xsl:template match="w:drawing">
+  <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="wp:inline">
+  <div>
+    <xsl:attribute name="class">inline-image</xsl:attribute>
+
+    <xsl:apply-templates select="a:graphic"/>
+  </div>
+  </xsl:template>
+
+  <xsl:template match="wp:anchor">
+  <div>
+    <xsl:attribute name="class">
+      anchored-image
+      align-<xsl:value-of select="./wp:positionH/wp:align"/>
+      align-<xsl:value-of select="./wp:positionV/wp:align"/>
+    </xsl:attribute>
+
+    <xsl:apply-templates select="a:graphic"/>
+
+    <xsl:if test="./wp:docPr/@descr">
+    <p class="caption"><xsl:value-of select="./wp:docPr/@descr"/></p>
+    </xsl:if>
+  </div>
+  </xsl:template>
+
+  <xsl:template match="a:graphic">
+  <xsl:apply-templates/>
+  </xsl:template>
+
+  <xsl:template match="pic:pic">
+    <xsl:variable
+      name="resourceId"
+      >
+      <xsl:choose>
+        <xsl:when test="./pic:blipFill/a:blip/a:extLst/a:ext/asvg:svgBlip">
+          <xsl:value-of select="./pic:blipFill/a:blip/a:extLst/a:ext/asvg:svgBlip/@r:embed"/>
+        </xsl:when>
+
+        <xsl:otherwise>
+          <xsl:value-of select="./pic:blipFill/a:blip/@r:embed"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:variable
+      name="originalName"
+      select="./pic:nvPicPr/pic:cNvPr/@name"
+      />
+    <xsl:variable
+      name="title"
+      select="ancestor::node()[3]/wp:docPr/@title"
+      />
+    <xsl:variable
+      name="altText"
+      select="ancestor::node()[3]/wp:docPr/@descr"
+      />
+    <xsl:variable
+      name="w"
+      select="round(./pic:spPr/a:xfrm/a:ext/@cx div (914400 div 96))"
+      />
+    <xsl:variable
+      name="h"
+      select="round(./pic:spPr/a:xfrm/a:ext/@cy div (914400 div 96))"
+      />
+
+    <img
+      src="php/get-image.php?f={$sourceFile}&amp;rId={$resourceId}&amp;n={$originalName}"
+      title="{$title}" alt="{$altText}"
+      width="{$w}" height="{$h}">
+    </img>
+  </xsl:template>
+
+</xsl:stylesheet>

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<xsl:stylesheet version="1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  exclude-result-prefixes="w"
+  >
+
+  <xsl:template match="w:tbl">
+  <div class="table-container">
+  <xsl:attribute name="class">
+    table-container
+    <xsl:value-of select="./w:tblPr/w:tblStyle/@w:val"/>
+  </xsl:attribute>
+
+  <table>
+    <xsl:attribute name="class">
+      <xsl:value-of select="./w:tblPr/w:tblStyle/@w:val"/>
+
+      <xsl:if test="./w:tblPr/w:tblLook/@w:noVBand = '0'">
+        <xsl:value-of select="' has-v-bands'"/>
+      </xsl:if>
+
+      <xsl:if test="./w:tblPr/w:tblLook/@w:noHBand = '0'">
+        <xsl:value-of select="' has-h-bands'"/>
+      </xsl:if>
+
+      <xsl:if test="./w:tblPr/w:tblLook/@w:lastColumn = '1'">
+        <xsl:value-of select="' hilite-last-col'"/>
+      </xsl:if>
+
+      <xsl:if test="./w:tblPr/w:tblLook/@w:lastRow = '1'">
+        <xsl:value-of select="' hilite-last-row'"/>
+      </xsl:if>
+
+      <xsl:if test="./w:tblPr/w:tblLook/@w:firstColumn = '1'">
+        <xsl:value-of select="' hilite-first-col'"/>
+      </xsl:if>
+
+      <xsl:if test="./w:tblPr/w:tblLook/@w:firstRow = '1'">
+        <xsl:value-of select="' hilite-first-row'"/>
+      </xsl:if>
+
+    </xsl:attribute>
+    <xsl:apply-templates/>
+  </table>
+  </div>
+  </xsl:template>
+
+  <xsl:template match="w:tr">
+  <tr><xsl:apply-templates/></tr>
+  </xsl:template>
+
+  <xsl:template match="w:tc">
+  <td>
+    <xsl:if test="w:tcPr/w:gridSpan/@w:val">
+      <xsl:attribute name="colspan"><xsl:value-of select="w:tcPr/w:gridSpan/@w:val"/></xsl:attribute>
+    </xsl:if>
+    <xsl:apply-templates/>
+  </td>
+  </xsl:template>
+
+  <xsl:template match="w:tblGrid">
+    <xsl:variable
+      name="gridSum"
+      select="sum(w:gridCol/@w:w)"
+      />
+    <colgroup>
+    <xsl:for-each select="w:gridCol">
+      <col style="width: {round(1000 * @w:w div $gridSum) div 1000}%"/>
+    </xsl:for-each>
+    </colgroup>
+  </xsl:template>
+
+</xsl:stylesheet>

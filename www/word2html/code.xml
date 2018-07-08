@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  exclude-result-prefixes="w"
+  >
+
+  <xsl:template match="w:p[./w:pPr/w:pStyle/@w:val='Code']">
+  <div class="code-container">
+    <pre><code><xsl:apply-templates/></code></pre>
+  </div>
+  </xsl:template>
+
+</xsl:stylesheet>
