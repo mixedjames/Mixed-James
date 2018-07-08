@@ -12,7 +12,7 @@ if (isset($_GET['n'])) {
   $zip = new ZipArchive();
   $path = '../articles/' . $_GET['f'] . '.zip';
 
-  if($zip->open($path, 0)) {
+  if($zip->open($path, 0) === TRUE) {
     $resourcePath = $_GET['n'];
     $resourcePath = substr($resourcePath, 0 , (strrpos($resourcePath, "."))) . ".svg";
 
@@ -66,6 +66,9 @@ function GuessMimeType($filename) {
   case 'jpeg':
   case 'jpg':
     return 'image/jpeg';
+
+  case 'svg':
+    return 'image/svg+xml';
 
   default:
     return 'application/octet-stream';
